@@ -1,6 +1,6 @@
-const fs = require('fs')
+import fs from "fs";
 
-class ProductManager{
+export class ProductManager{
     constructor(rutaArchivo){
         this.path = rutaArchivo
     }
@@ -80,14 +80,14 @@ class ProductManager{
 }
 
 
-const pm =new ProductManager("./productos.json")
-console.log(pm.getProducts())
-pm.addProducts('remera', 'remera de manga corta color azul', 2000, 'imagenes\remera.webp', 30)
-pm.addProducts('short', 'short de jean', 5000, 'imagenes\short.jpeg', 15)
-pm.addProducts('vestido', 'vestido lunares', 4000, 'imagenes\vestido de lunares.webp', 30)
+// const pm =new ProductManager("./productos.json")
+// console.log(pm.getProducts())
+// pm.addProducts('remera', 'remera de manga corta color azul', 2000, 'imagenes\remera.webp', 30)
+// pm.addProducts('short', 'short de jean', 5000, 'imagenes\short.jpeg', 15)
+// pm.addProducts('vestido', 'vestido lunares', 4000, 'imagenes\vestido de lunares.webp', 30)
 
-console.log(pm.getProducts())
-pm.deleteProduct(2)
-console.log(pm.getProducts())
-pm.updateProduct(4,{title:'pollera', description: 'pollera de jean', price:12000, thumbnail:'imagen/pollera', code:4, stock:5})
-console.log(pm.updateProduct()) 
+// console.log(pm.getProducts())
+// pm.deleteProduct(2)
+// console.log(pm.getProducts())
+// pm.updateProduct(4,{title:'pollera', description: 'pollera de jean', price:12000, thumbnail:'imagen/pollera', code:4, stock:5})
+// console.log(pm.updateProduct()) 
