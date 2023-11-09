@@ -4,23 +4,28 @@ import { productManager } from "../index.js"
 const router = Router()
 
 // Obtener lista de productos (GET: http://localhost:8080/api/products || http://localhost:8080/api/products?limit=3)
-router.get("/", (req, res) => {
-    const limit = req.query.limit
-    const products = productManager.getProducts()
+router.get("/", async (req, res) => {
+    try {
+        const limit = req.query.limit
+        const products = await productManager.getProducts(); // Esperar a que se resuelva la promesa
 
-    if (limit) {
+        if (limit) {
             const productsLimit = products.slice(0, parseInt(limit))
             res.status(200).json({ data: productsLimit })
-    } else {
+        } else {
             res.status(200).json({ data: products })
+        }
+    } catch (error) {
+        res.status(500).json({ error: error.message })
     }
 })
 
-// Obtener un producto por su ID (GET: http://localhost:8080/api/products/1)
+
+// Get a product by its ID (GET: http://localhost:8080/api/products/1)
 router.get("/:pid", async (req, res) => {
     try {
         const pid = parseInt(req.params.pid)
-        const product = productManager.getProductById(pid)
+        const product = await productManager.getProductById(pid)
         
         if (product) {
             res.status(200).json({ data: product })
@@ -32,7 +37,7 @@ router.get("/:pid", async (req, res) => {
     }
 })
 
-// Agregar un nuevo producto (POST: http://localhost:8080/api/products)
+// Add a new product (POST: http://localhost:8080/api/products)
 router.post("/", async (req, res) => {
     try {
         const productInfo = req.body
@@ -44,7 +49,7 @@ router.post("/", async (req, res) => {
     }
 })
 
-// Actualizar un producto por su ID (PUT: http://localhost:8080/api/products/1)
+// Update a product by its ID (PUT: http://localhost:8080/api/products/1)
 router.put("/:pid", async (req, res) => {
     try {
         const pid = parseInt(req.params.pid)
@@ -57,7 +62,7 @@ router.put("/:pid", async (req, res) => {
     }
 })
 
-// Eliminar un producto por su ID (DELETE: http://localhost:8080/api/products/2)
+// Delete a product by its ID (DELETE: http://localhost:8080/api/products/2)
 router.delete("/:pid", async (req, res) => {
     try {
         const pid = parseInt(req.params.pid)

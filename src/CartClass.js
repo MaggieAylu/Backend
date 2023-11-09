@@ -1,4 +1,5 @@
 import fs from "fs"
+import path from "path"
 import { ProductManager } from "./ProductManagerClass.js"
 
 
@@ -14,35 +15,35 @@ export class CartManager {
 
     async getCarts() {
         try {
-            if (await this.fileExists()) {
-                const content = await fs.promises.readFile(this.filePath, "utf-8");
-                const carts = JSON.parse(content);
-                return carts;
+            if (this.fileExists()) {
+                const content = await fs.promises.readFile(this.filePath, "utf-8")
+                const carts = JSON.parse(content)
+                return carts
             } else {
-                return [];
+                return []
             }
         } catch (error) {
-            console.error("Error al obtener los carritos del archivo:", error);
-            throw new Error("Error al obtener los carritos del archivo");
+            console.error("Error al obtener los carritos del archivo:", error)
+            throw new Error("Error al obtener los carritos del archivo")
         }
     }
     
     // Crear un carrito
     async createCart() {
         try {
-            const carts = await this.getCarts();
+            const carts = await this.getCarts()
     
             // Autogenerar ID
-            const newCartId = carts.reduce((maxId, cart) => Math.max(maxId, cart.id), 0);
-            const newCart = { id: newCartId + 1, products: [] };
+            const newCartId = carts.reduce((maxId, cart) => Math.max(maxId, cart.id), 0)
+            const newCart = { id: newCartId + 1, products: [] }
     
             // Crear el nuevo carrito
-            carts.push(newCart);
-            await fs.promises.writeFile(this.filePath, JSON.stringify(carts, null, "\t"));
-            return newCart;
+            carts.push(newCart)
+            await fs.promises.writeFile(this.filePath, JSON.stringify(carts, null, "\t"))
+            return newCart
         } catch (error) {
-            console.error("Error al crear el carrito:", error);
-            throw new Error("Error al crear el carrito");
+            console.error("Error al crear el carrito:", error)
+            throw new Error("Error al crear el carrito")
         }
     }
     
@@ -81,7 +82,6 @@ export class CartManager {
                     throw new Error("Error al agregar el producto al carrito: la cantidad debe ser un número mayor o igual a 1");
                 }
     
-                // Resto del código
             } else {
                 throw new Error("Error al agregar el producto al carrito: error al obtener los carritos del archivo");
             }

@@ -4,7 +4,7 @@
           "title": "remera",
           "description": "remera de manga corta color azul",
           "price": 2000,
-          "thumbnail": "imagenes\remera.webp",
+          "thumbnail": "imagenes/remera.webp",
           "titulo": "pollera",
           "precio": 12000
      },
@@ -13,7 +13,7 @@
           "title": "vestido",
           "description": "vestido lunares",
           "price": 4000,
-          "thumbnail": "imagenes\u000bestido de lunares.webp"
+          "thumbnail": "imagenes/vestido de lunares.webp"
      },
      {
           "id": 4,
@@ -21,7 +21,7 @@
                "title": "pollera",
                "description": "pollera de jean",
                "price": 12000,
-               "thumbnail": "imagen/pollera",
+               "thumbnail": "imagen/pollera.jpg",
                "code": 4,
                "stock": 5
           },
@@ -33,13 +33,13 @@
           "title": "short",
           "description": "short de jean",
           "price": 5000,
-          "thumbnail": "imagenesshort.jpeg"
+          "thumbnail": "imagenes/short.jpeg"
      },
      {
           "id": 6,
           "title": "vestido",
           "description": "vestido lunares",
           "price": 4000,
-          "thumbnail": "imagenes\u000bestido de lunares.webp"
+          "thumbnail": "imagenes/vestido de lunares.webp"
      }
 ]

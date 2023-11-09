@@ -41,12 +41,13 @@ export class ProductManager{
         try {
             if (this.fileExist()) {
                 const content = await fs.promises.readFile(this.filePath, "utf-8");
-                return JSON.parse(content);
+                const products = JSON.parse(content)
+                return products
             } else {
                 return []
             }
         } catch (error) {
-            console.error(error); // Imprime el error original
+            console.error(' al obtener los productos del archivo', error); // Imprime el error original
             throw new Error('Error reading products')
         }
     }
