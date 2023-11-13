@@ -72,24 +72,19 @@ export class CartManager {
     async addProductToCart(cartId, productId, quantity) {
         try {
             if (this.fileExists()) {
-                const carts = await this.getCarts();
-                const cart = await this.getCartById(cartId, carts);
-                const productById = await this.ProductManager.getProductById(productId);
-
-
-                // Validar que quantity sea un número válido y mayor o igual a 1
+                const carts = await this.getCarts()
+                const cart = await this.getCartById(cartId, carts)
+                const productById = await this.ProductManager.getProductById(productId)
                 if (isNaN(quantity) || quantity < 1) {
-                    throw new Error("Error al agregar el producto al carrito: la cantidad debe ser un número mayor o igual a 1");
+                    throw new Error("Error al agregar el producto al carrito: la cantidad debe ser un número mayor o igual a 1")
                 }
-    
             } else {
-                throw new Error("Error al agregar el producto al carrito: error al obtener los carritos del archivo");
+                throw new Error("Error al agregar el producto al carrito: error al obtener los carritos del archivo")
             }
         } catch (error) {
-            throw error;
+            throw error
         }
     }
-    
 }
 
 

@@ -3,11 +3,10 @@ import { productManager } from "../index.js"
 
 const router = Router()
 
-// Obtener lista de productos (GET: http://localhost:8080/api/products || http://localhost:8080/api/products?limit=3)
 router.get("/", async (req, res) => {
     try {
         const limit = req.query.limit
-        const products = await productManager.getProducts(); // Esperar a que se resuelva la promesa
+        const products = await productManager.getProducts()
 
         if (limit) {
             const productsLimit = products.slice(0, parseInt(limit))
@@ -20,8 +19,6 @@ router.get("/", async (req, res) => {
     }
 })
 
-
-// Get a product by its ID (GET: http://localhost:8080/api/products/1)
 router.get("/:pid", async (req, res) => {
     try {
         const pid = parseInt(req.params.pid)
@@ -37,10 +34,12 @@ router.get("/:pid", async (req, res) => {
     }
 })
 
-// Add a new product (POST: http://localhost:8080/api/products)
 router.post("/", async (req, res) => {
     try {
-        const productInfo = req.body
+        const { title, description, price, code, stock} = req.body
+        if(!title || !description || !price || !code || !stock){
+            throw new Error("Error adding products: all fields are fields required")
+        }
 
         await productManager.addProduct(productInfo)
         res.status(201).json({ message: "Producto agregado" })
@@ -49,7 +48,6 @@ router.post("/", async (req, res) => {
     }
 })
 
-// Update a product by its ID (PUT: http://localhost:8080/api/products/1)
 router.put("/:pid", async (req, res) => {
     try {
         const pid = parseInt(req.params.pid)
@@ -62,7 +60,6 @@ router.put("/:pid", async (req, res) => {
     }
 })
 
-// Delete a product by its ID (DELETE: http://localhost:8080/api/products/2)
 router.delete("/:pid", async (req, res) => {
     try {
         const pid = parseInt(req.params.pid)
