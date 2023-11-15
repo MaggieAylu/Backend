@@ -1,5 +1,6 @@
 import { Router} from "express"
 import { productManager } from "../index.js"
+import {io} from "../app.js"
 
 const router = Router()
 
@@ -42,7 +43,14 @@ router.post("/", async (req, res) => {
         }
 
         await productManager.addProduct(productInfo)
-        res.status(201).json({ message: "Producto agregado" })
+        let productoNuevo = productManager.createProduct({id, ...req.body})
+
+        // Emit event to notify clients about the new product
+        io.emit('nuevoProduct', nombre)
+        req.io.emit('nuevoProductoConMiddleware', nombre)
+
+        res.setHeader('Content-Type', 'application/json')
+        return res.status(201).json({payload:productoNuevo})
     } catch (error) {
         res.status(500).json({ error: error.message })
     }
@@ -70,5 +78,6 @@ router.delete("/:pid", async (req, res) => {
         res.status(500).json({ error: error.message })
     }
 })
+
 
 export { router as productsRouter }
