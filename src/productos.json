@@ -17,17 +17,14 @@
      },
      {
           "id": 4,
-          "title": {
-               "title": "pollera",
-               "description": "pollera de jean",
-               "price": 12000,
-               "thumbnail": "imagen/pollera.jpg",
-               "code": 4,
-               "stock": 5
-          },
-          "titulo": "pollera",
-          "precio": 12000
+          "title":"pollera",
+          "description": "pollera de jean",
+          "price": 12000,
+          "thumbnail": "imagen/pollera.jpg",
+          "code": 4,
+          "stock": 5
      },
+     
      {
           "id": 5,
           "title": "short",
