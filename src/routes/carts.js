@@ -1,7 +1,8 @@
 import { Router } from "express"
-import { cartManager, productManager } from "../index.js"
+// import { cartManager, productManager } from "../index.js"
 
-const router = Router()
+
+export const router = Router()
 
 router.post("/", async (req, res) => {
     try {

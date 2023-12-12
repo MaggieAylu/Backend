@@ -1,9 +1,9 @@
 import { __dirname } from "./utils.js"
 import path from "path"
-import { ProductManager } from "./ProductManagerClass.js"
-import { CartManager } from "./CartClass.js"
+import { ProductMongo } from "./dao/Mongo/productMongo.js"
+import { CartMongo } from "./dao/Mongo/CartMongo.js"
 
 
-export const productManager = new ProductManager(path.join(__dirname, "/productos.json"))
-export const cartManager = new CartManager(path.join(__dirname, "/carts.json"))
+export const productMongo = new ProductMongo()
+export const cartMongo = new CartMongo()
 
