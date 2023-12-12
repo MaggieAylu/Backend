@@ -1,25 +1,23 @@
 import mongoose from "mongoose"
 
-export const chatModels = mongoose.model(
-    "message",
-    new mongoose.Schema(
-        {
-            emisor: {
-                type: String,
-                required: true, 
-            },
-            message: {
-                type: String,
-                required: true,
-            },
-            timestamp: {
-                type: Date,
-                default: DataTransfer.now,
-            },
+const chatCollection = 'chat'
+const chatSchema = new mongoose.Schema(
+    {
+        user: {
+            type: String,
+            required: true, 
         },
-        { timestamps: true }
-    )
+        message: {
+            type: String,
+            required: true,
+        },
+        timestamp: {
+            type: Date,
+            default: DataTransfer.now,
+        },
+    },
+    { timestamps: true },
 )
 
-const Chat = mongoose.model('message', chatModels)
-export default Chat
+
+export const ChatModel = mongoose.model(chatCollection, chatSchema)

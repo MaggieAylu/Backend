@@ -10,7 +10,10 @@ const productSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
-    thumbnail: String,
+    thumbnail: {
+      type: String,
+      default: [],
+    },
     code: {
       type: String,
       unique: true,

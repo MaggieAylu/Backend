@@ -1,10 +1,10 @@
-import { messagesModelo } from "./models/message.models"
+import { ChatModel } from "../models/chat.model"
 
 
 export class MessageManagerMongo {
   async getMessagesMongo() {
     try {
-      return await messagesModelo.find({ deleted: false }).lean()
+      return await ChatModel.find({ deleted: false }).lean()
     } catch (error) {
       console.log(error.messsage)
       return null
@@ -19,7 +19,7 @@ export class MessageManagerMongo {
             user: user,
             message: message,
           }
-       let nuevoMensaje = await messagesModelo.create(mensaje)
+       let nuevoMensaje = await ChatModel.create(mensaje)
         return nuevoMensaje
     } catch (error) {
         console.log(`error inesperado en el servidor -Intente mas tarde`, error.message)

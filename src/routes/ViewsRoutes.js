@@ -4,7 +4,6 @@ export const router=Router()
 
 
 router.get('/', async (req,res)=>{
-
     let productos = await productMongo.getProductsMongo()
     res.status(200).render('home', {
         productos: productos

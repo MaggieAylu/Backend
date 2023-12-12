@@ -2,7 +2,7 @@ console.log("cargo de productos.js")
 
 const socket=io()
 
-sockets.on("nuevoProducto", producto=>{
+socket.on("nuevoProducto", producto=>{
     console.log("viene importado:", producto)
     document.location.href='/realTimeProducts'
 

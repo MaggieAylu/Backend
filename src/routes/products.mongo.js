@@ -88,7 +88,7 @@ router.post('/',async (req,res)=>{
     let {pid} = req.params
     let existe 
   
-    if(!mongoose.Types.ObjectId.isValid(pid)){ // con esta instruccion validamos que el ID sea Valido 
+    if(!mongoose.Types.ObjectId.isValid(pid)){ 
       res.setHeader('Content-Type','application/json')
       return res.status(400).json({error:`Please enter a valid ID...!!!`})
   }

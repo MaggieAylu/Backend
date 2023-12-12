@@ -2,7 +2,7 @@ import mongoose from "mongoose"
 
 const cartsCollection = 'carts'
 
-const cartsEsquema = new mongoose.Schema(
+const cartSchema = new mongoose.Schema(
     {
         products: Array,
         deleted: {
@@ -16,4 +16,4 @@ const cartsEsquema = new mongoose.Schema(
     }
 )
 
-export const cartsModelo = mongoose.model(cartsCollection, cartsEsquema)
+export const cartsModel = mongoose.model(cartsCollection, cartSchema)
