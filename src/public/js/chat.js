@@ -18,6 +18,7 @@ Swal.fire({
     document.title=resultado.value
 
     socket.on('nuevoUsuario',nombre=>{
+        // TODO: popup con el aviso
         Swal.fire({
             text:`${nombre} se ha conectado...!!!`,
             toast:true,
@@ -32,7 +33,7 @@ Swal.fire({
             parrafo.classList.add('mensaje')
             let br=document.createElement('br')
             divMensajes.append(parrafo, br)
-            divMensajes.scrollTop=divMensajes.scrollHeight   
+            divMensajes.scrollTop=divMensajes.scrollHeight
         })
     })
 
@@ -54,6 +55,7 @@ Swal.fire({
     })
 
     inputMensaje.addEventListener("keyup",(e)=>{
+        // console.log(e, e.target.value)
         if(e.code==="Enter" && e.target.value.trim().length>0){
             socket.emit('mensaje',{emisor:resultado.value, mensaje:e.target.value.trim()})
             e.target.value=''

@@ -1,7 +1,7 @@
 import {Router} from 'express'
 import { productMongo } from "../index.js"
-export const router=Router()
 
+export const router=Router()
 
 router.get('/', async (req,res)=>{
     let productos = await productMongo.getProductsMongo()
@@ -9,6 +9,8 @@ router.get('/', async (req,res)=>{
         productos: productos
     })
 })
+
+router.get('/')
 
 router.get('/realtimeproducts', async (req,res)=>{
 

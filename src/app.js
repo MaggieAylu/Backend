@@ -2,7 +2,6 @@ import express from "express"
 import { fileURLToPath } from 'url'
 import path from "path"
 import { engine } from 'express-handlebars'
-import { productsRouter } from "../src/routes/products.js"
 import { viewsRouter } from "./routes/ViewsRoutes.js"
 import { cartsRouter } from "../src/routes/carts.js"
 import { Server } from 'socket.io'
@@ -43,7 +42,7 @@ app.use('/api/products', (req, res, next)=>{
     }
     req.io= io
     next()
-}, productsRouter)
+}, ProductRouterMongo)
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")))
@@ -78,7 +77,6 @@ try{
     console.log(error.message)
 }
 
-
 let usuarios=[]
 let mensajes=[]
 
@@ -103,3 +101,28 @@ io.on('connection', socket=>{
         }
     })
 })
+
+// const products = await productManager.getProducts()
+// io.emit("productsArray", products)
+
+// // Add the product from the client socket
+// io.on("addProduct", async (productsData) => {
+//     try {
+//         const result = await productManager.addProduct(productsData)
+//         const products = await productManager.getProducts()
+//         socketServer.emit("productsArray", products)
+//     } catch (error) {
+//         console.error(error.message)
+//     }
+// })
+
+// // Remove the product from the client socket
+// io.on("deleteProduct", async (productId) => {
+//     try {
+//         const result = await productManager.deleteProduct(productId)
+//         const products = await productManager.getProducts()
+//         socketServer.emit("productsArray", products)
+//     } catch (error) {
+//         console.error(error.message)
+//     }
+// })

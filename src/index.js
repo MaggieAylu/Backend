@@ -1,5 +1,3 @@
-import { __dirname } from "./utils.js"
-import path from "path"
 import { ProductMongo } from "./dao/Mongo/productMongo.js"
 import { CartMongo } from "./dao/Mongo/CartMongo.js"
 

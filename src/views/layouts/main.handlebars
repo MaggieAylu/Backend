@@ -3,10 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/styles.css">
-    <title>Document</title>
+    <link rel="shortcut icon" href="{{imagenes/claire-de-lune.png}}" type="image/x-icon">
+    <title>Claire de lune</title>
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="CSS/styles.css" rel="stylesheet">
+    {{!-- <script defer src="JS/index.js"></script> --}}
 </head>
 <body>
+    <header>
+        <input type="checkbox" name="" id="toggler">
+        <label for="toggler" class="fas fa-bars"></label>
+        <a href="#" class="logo">Claire de lune <span>.</span></a>
+        <nav class="nav">
+            <a href="/">Home</a>
+            <a href="/realtimeproducts">Real Time Products</a>
+            <a href="/chat">Chat</a>
+            <a href="/realtimeproducts">Products Page</a>
+        </nav>
+            <div class="iconos">  
+            <a href="#" class="fas fa-shopping-cart" id="verCarrito"></a>
+            </div>
+
+
+    </header>
+
     {{{body}}}
+
+    <section class="carrito-contenido" id="carrito-contenido"></section>
+
+    <section class="footer">
+        <div class="caja-contenido">
+
+            <div class="caja">
+                <h3>Links</h3>
+                <a href="/">Home</a>
+                <a href="/realtimeproducts">Real Time Products</a>
+                <a href="/chat">Chat</a>
+                <a href="/realtimeproducts">Products page</a>
+            </div>
+
+            <div class="caja" id="contactanos">
+                <h3>Contacto</h3>
+                <a href="#">+5491148597602</a>
+                <a href="#">clairedelune@gmail.com</a>
+                <a href="#">Capital Federal</a>
+                <img src="{{{imagenes/iconos/america.png}}}" alt="Icono América">
+                <img src="{{{imagenes/iconos/pay-pal.ico}}}" alt="Pay-Pal">
+                <img src="{{{imagenes/iconos/master-card.ico}}}" alt="Master Card">
+            </div>
+
+            <div class="credito"> </div>
+        </div>
+    </section>
 </body>
 </html>
