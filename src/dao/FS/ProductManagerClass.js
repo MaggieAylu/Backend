@@ -70,7 +70,7 @@ export class ProductManager{
     async deleteProduct(id) {
         try {
             if (this.fileExist()) {
-                let products = await this.getProducts(); // Obtener los productos de manera asincrónica
+                let products = await this.getProducts() // Obtener los productos de manera asincrónica
                 let index = products.findIndex(p => p.id === id)
                 if (index === -1) {
                     console.log(`${id} Not found`)

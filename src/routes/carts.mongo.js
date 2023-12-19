@@ -1,123 +1,123 @@
 import { Router } from 'express'
-import { cartsModel } from '../dao/models/cart.model.js'
 import { CartMongo } from '../dao/Mongo/CartMongo.js'
-import { ProductMongo } from '../dao/Mongo/productMongo.js'
 
 export const router=Router()
 
-const cartMongo = new CartMongo()
-const productMongo = new ProductMongo()
-
-// Get all carts
-router.get("/", async (req, res) => {
-    try {
-        const carts = await cartMongo.getCarts() 
-        res.status(201).json({ data: carts }) 
-    } catch (error) {
-        res.status(500).json({ error: error.message }) 
-    }
+router.get("/", async (req, res) => { 
+  res.setHeader("Content-Type", "application/json")
+  let carts = await  CartMongo.getCarts() 
+  if (!carts) {
+    res.status(400).json({error: 'Could not fetch carts'}) 
+  } else {
+    res.status(200).json({ carts }) 
+  }
 }) 
 
-// Get a cart by ID
-router.get("/:cid", async (req, res) => {
-    try {
-        const { cid } = req.params 
-        const cart = await cartMongo.getCartById(cid) 
-        res.status(201).json({ data: cart }) 
-    } catch (error) {
-        res.status(500).json({ error: error.message }) 
-    }
+router.get("/:cid", async (req, res) => { 
+  res.setHeader("Content-Type", "application/json") 
+  let id = req.params.cid  
+  let result = await  CartMongo.getCartById(id) 
+  if (!result) {
+    res.status(400).json({error: "The cart couldn't be found"}) 
+  } else {
+    res.status(200).json({ result }) 
+  }
 }) 
 
-// Create a cart
-router.post("/", async (req, res) => {
-    try {
-        const createdCart = await cartMongo.createCart() 
-        res.status(201).json({ data: createdCart }) 
-    } catch (error) {
-        res.status(500).json({ error: error.message }) 
+router.post("/:cid/product/:pid", async (req, res) => { 
+  res.setHeader("Content-Type", "application/json")  
+  let cartId  = req.params.cid 
+  let productId = req.params.pid 
+  let product = req.body  
+  if (productId != product.productId){
+    return res.status(400).json({error: "The product Id in the URL must match the productId in the req.body"}) 
+  }
+  if (!cartId || !productId) {
+    return res.status(400).json({error: "The cart or product ID you entered is not a valid number"}) 
+  }
+  let result = await  CartMongo.addProductToCart(cartId, product)
+  if (result){
+    res.status(200).json({status:'success', message: "Product added to the cart successfully"})
+  } else {
+    return res.status(400).json({status: 'error', error: "The cart couldn't be updated, make sure you entered the data correctly"})
+  }
+})  
+
+router.post("/", async (req,res) => { 
+  let products = req.body  
+  if (!products) {
+    return res.status(400).json({status: 'error', error: "Incomplete data, make sure specify the products to be added to the cart"})
+  } else {
+    let result = await  CartMongo.addCart(products) 
+    if (result) {
+      res.status(200).json({status:'success', message: "Cart created successfully"})
+    } else{
+      return res.status(400).json({status: 'error', error: "The cart couldn't be created, make sure you entered the data correctly"})
     }
+  }
 }) 
 
-// Add a product to a cart
-router.post("/:cid/product/:pid", async (req, res) => {
-    try {
-        const { cid, pid } = req.params 
+router.delete("/:cid/product/:pid", async (req, res) => { 
+  res.setHeader("Content-Type", "application/json")  
+  let cartId  = req.params.cid 
+  let productId = req.params.pid 
+  if (!cartId || !productId) {
+    return res.status(400).json({error: "The cart or product ID you entered is not a valid number"}) 
+  }
+  let result = await  CartMongo.deleteProductFromCart(cartId, productId)
+  if (result){
+    res.status(200).json({status:'success', message: "Product deleted from cart successfully"})
+  } else {
+    return res.status(400).json({status: 'error', error: "The product couldn't be deleted from the cart"})
+  }
+})  
 
-        // Check if cid and pid exist or throw the corresponding error
-        const cart = await cartMongo.getCartById(cid) 
-        const product = await productMongo.getProductByIdMongo(pid) 
+router.delete("/:cid", async (req, res) => { 
+  res.setHeader("Content-Type", "application/json")  
+  let cartId = req.params.cid  
+  if (!cartId) { 
+    return res.status(400).json({error: "Please provide a valid cart ID"}) 
+  }
+  let result = await  CartMongo.emptyCart(cartId) 
+  if (result) { 
+    res.status(200).json({status: 'success', message: "Cart deleted successfully"}) 
+  } else {
+    res.status(400).json({error: "The cart couldn't be found or emptied"}) 
+  }
+})  
 
-        const addedProductToCart = await cartMongo.addProductToCart(cid, pid) 
-        res.status(200).json({ data: addedProductToCart }) 
-    } catch (error) {
-        res.status(500).json({ error: error.message }) 
+router.put('/:cid', async (req, res) => { 
+  res.setHeader("Content-Type", "application/json")  
+  let cartId = req.params.cid  
+  let products = req.body 
+  if (!products) {
+    return res.status(400).json({status: 'error', error: "Incomplete data, make sure specify the products to be added to the cart"})
+  } else {
+    let result = await  CartMongo.updateCart(cartId, products) 
+    if (result) {
+      res.status(200).json({status:'success', message: "Cart updated successfully"})
+    } else{
+      return res.status(400).json({status: 'error', error: "The cart couldn't be updated, make sure you entered the data correctly"})
     }
-}) 
+  }
+})  
 
-// Update a cart with an array of products
-router.put("/:cid", async (req, res) => {
-    try {
-        const { cid } = req.params 
-        const { newProducts } = req.body 
-
-        // Check if cid exists or throw the corresponding error
-        const cart = await cartMongo.getCartById(cid) 
-
-        const updatedProductsInCart = await cartMongo.updateProductsInCart(cid, newProducts) 
-        res.status(200).json({ data: updatedProductsInCart }) 
-    } catch (error) {
-        res.status(500).json({ error: error.message }) 
+router.put('/:cid/product/:pid', async (req, res) => { 
+  res.setHeader("Content-Type", "application/json")  
+  let cartId = req.params.cid  
+  let productId = req.params.pid 
+  let {quantity} = req.body  
+  quantity = parseInt(quantity)  
+  if (!cartId || !productId || !quantity || !Number.isInteger(quantity)) {
+    return res.status(400).json({status: 'error', error: "Incomplete data, make sure specify the quantity of the product to be updated"})
+  } else {
+    let result = await  CartMongo.updateProductQuantityCart(cartId, productId, quantity) 
+    if (result) {
+      res.status(200).json({status:'success', message: "Product quantity in Cart updated successfully"})
+    } else{
+      return res.status(400).json({status: 'error', error: "The product quantity in Cart couldn't be updated, make sure you entered the data correctly"})
     }
-}) 
-
-// Update the quantity of a product in the cart
-router.put("/:cid/products/:pid", async (req, res) => {
-    try {
-        const { cid, pid } = req.params 
-        const { newQuantity } = req.body 
-
-        // Check if cid and pid exist or throw the corresponding error
-        const cart = await cartMongo.getCartById(cid) 
-        const product = await productMongo.getProductByIdMongo(pid) 
-
-        const updatedQuantityProductInCart = await cartMongo.updateProductQuantityInCart(cid, pid, newQuantity) 
-        res.status(200).json({ data: updatedQuantityProductInCart }) 
-    } catch (error) {
-        res.status(500).json({ error: error.message }) 
-    }
-}) 
-
-// Delete all products from a cart
-router.delete("/:cid", async (req, res) => {
-    try {
-        const { cid } = req.params 
-        const { newCart } = req.body 
-
-        // Check if cid exists or throw the corresponding error
-        const cart = await cartMongo.getCartById(cid) 
-
-        const emptyNewCart = await cartMongo.deleteAllProductsInCart(cid, newCart) 
-        res.status(200).json({ data: emptyNewCart }) 
-    } catch (error) {
-        res.status(500).json({ error: error.message }) 
-    }
-}) 
-
-// Delete a product from the cart
-router.delete("/:cid/products/:pid", async (req, res) => {
-    try {
-        const { cid, pid } = req.params 
-
-        // Check if cid and pid exist or throw the corresponding error
-        const cart = await cartMongo.getCartById(cid) 
-        const product = await productMongo.getProductByIdMongo(pid) 
-
-        const newCart = await cartMongo.deleteProductInCart(cid, pid) 
-        res.status(200).json({ data: newCart }) 
-    } catch (error) {
-        res.status(500).json({ error: error.message }) 
-    }
+  }
 }) 
 
 export {router as cartRouterMongo}

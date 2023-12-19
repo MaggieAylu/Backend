@@ -26,7 +26,7 @@ const app = express()
 
 app.engine('handlebars', engine())
 app.set('view engine', 'handlebars')
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'views'))
 
 
 app.use(express.json())
@@ -34,7 +34,7 @@ app.use(express.urlencoded({ extended: true }))
 
 app.use(express.static(path.join(new URL('/', import.meta.url).pathname, 'public')))
 
-app.use('/', viewsRouter);
+app.use('/', viewsRouter)
 app.use('/api/products', (req, res, next)=>{
     req.codigo='007'
     if(req.query.nombre){
@@ -44,10 +44,10 @@ app.use('/api/products', (req, res, next)=>{
     next()
 }, ProductRouterMongo)
 
-app.use(express.json());
+app.use(express.json())
 app.use(express.static(path.join(__dirname, "public")))
 // app.use("/", productsRouter)
-app.use("/api/carts", cartsRouter)
+// app.use("/api/carts", cartRouterMongo)
 
 app.use("/api/cartsmongo", cartRouterMongo)
 app.use("/api/productsmongo", ProductRouterMongo)
@@ -56,7 +56,7 @@ app.use("/api/productsmongo", ProductRouterMongo)
 // Iniciar el servidor HTTP en lugar de app.listen
 // httpServer.listen(PORT, () => {
 //     console.log("Servidor funcionando")
-// });
+// })
 
 const server=app.listen(PORT,()=>{
     console.log(`Server escuchando en puerto ${PORT}`)

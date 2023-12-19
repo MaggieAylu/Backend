@@ -1,118 +1,112 @@
 import { Router } from "express" 
-import { uploader } from "../utils.js" 
 import { productMongo } from "../index.js" 
+import { io } from '../app.js'
 
 const router = Router() 
 
-// Get all products
-router.get("/", async (req, res) => {
-    try {
-        const { limit = 8, page = 1, sort, category, stock } = req.query 
-        const query = {} 
-        const options = {
-            limit,
-            page,
-            sort,
-            lean: true
-        } 
 
-        // Filter by category
-        if (category) {
-            query.category = category 
+router.get("/", async (req, res) => { 
+    res.setHeader("Content-Type", "application/json")  
+    let {limit=10, page=1, category, sort={}} = req.query 
+    let sortOption = {}  
+    let query = {} 
+    if(category) {
+      query.description = { $regex: category, $options: 'i' }  
+    }
+    if (sort === "asc") {
+      sortOption = {price: 1} 
+    } else if (sort === "desc") {
+      sortOption = {price: -1} 
+    } else {
+      console.log('Only can be asc or desc')
+    }
+    console.log(`Queries received in products router LIMIT: ${limit}, PAGE: ${page}, QUERY: ${category}, SORT: ${sort}`)
+    limit = parseInt(limit)  
+    page = parseInt(page)
+    let products = await productMongo.getProducts(limit, page, query, sortOption) 
+    let {totalPages, hasNextPage, hasPrevPage, prevPage, nextPage} = products 
+    let prevLink = '', nextLink = '' 
+    if (hasPrevPage) {
+      prevLink = `localhost:8080/api/products?limit=${limit}&page=${prevPage}`
+    } else { prevLink = null}
+    if (hasNextPage) {
+      nextLink = `localhost:8080/api/products?limit=${limit}&page=${nextPage}`
+    } else { nextLink = null}
+    if (!products) {
+      res.status(400).json({ error: 'The products could not be fetched from the DB'}) 
+    } else {
+      res.status(200).json( 
+        {
+          status:'sucess',
+          payload: products.docs,
+          totalPages, hasNextPage, hasPrevPage, prevPage, nextPage, prevLink, nextLink
         }
-
-        // Filter by stock
-        if (stock) {
-            if (stock === "false" || stock == 0) {
-                query.stock = 0 
-            } else {
-                query.stock = stock 
-            }
-        }
-
-        // Sort by price
-        if (sort) {
-            if (sort === "asc") {
-                options.sort = { price: 1 } 
-            } else if (sort === "desc") {
-                options.sort = { price: -1 } 
-            }
-        }
-
-        const products = await productMongo.getProductsMongo(query, options) 
-        
-        const baseUrl = req.protocol + "://" + req.get("host") + req.originalUrl 
-        
-        const dataProducts = {
-            status: "success",
-            payload: products.docs,
-            totalPages: products.totalPages,
-            prevPage: products.prevPage,
-            nextPage: products.nextPage,
-            page: products.page,
-            hasPrevPage: products.hasPrevPage,
-            hasNextPage: products.hasNextPage,
-            prevLink: products.hasPrevPage ? `${baseUrl.replace(`page=${products.page}`, `page=${products.prevPage}`)}` : null,
-            nextLink: products.hasNextPage ? baseUrl.includes("page") ? baseUrl.replace(`page=${products.page}`, `page=${products.nextPage}`) : baseUrl.concat(`?page=${products.nextPage}`) : null,
-        } 
-
-        res.status(201).json({ data: dataProducts }) 
-    } catch (error) {
-        res.status(500).json({ error: error.message }) 
+       ) 
     }
-}) 
-
-// Get a product by ID
-router.get("/:pid", async (req, res) => {
+  }) 
+  
+  router.get("/:id", async (req, res) => { 
+    res.setHeader("Content-Type", "application/json")  
+    let id = req.params.id  
+    if (!id) {
+      return res.status(400).json({error: "The ID you entered is not a valid number"}) 
+    }
+    let result = await productMongo.getProductById(id) 
+    if (!result) {
+      res.status(400).json({error: "The product couldn't be found"}) 
+    } else {
+      res.status(200).json({ result }) 
+    }
+  }) 
+  
+  router.delete("/:id", async (req, res) => { 
+    res.setHeader("Content-Type", "application/json") 
+    let id = req.params.id  
+    if (!id) {
+      return res.status(404).json({error: "The ID you entered is not a valid number"}) 
+    }
+    let result = await productMongo.deleteProduct(id) 
+    let updatedProducts = await productMongo.getProducts() 
+    io.emit('newProduct', updatedProducts.docs) 
+    if (!result) {
+      res.status(400).json({error: "The product couldn't be found"}) 
+    } else {
+      res.status(200).json({status:'success', message:'Product removed successfully'})
+    }
+  }) 
+  
+  router.put("/:id", async (req, res) => { 
+    res.setHeader("Content-Type", "application/json") 
+    let product = req.body 
+    let id = req.params.id  
+    if (!id) {
+      return res.status(400).json({error: "The ID you entered is not a valid number"}) 
+    }
+    let result = await productMongo.updateProduct(id, product)  
+    let updatedProducts = await productMongo.getProducts() 
+    io.emit('newProduct', updatedProducts.docs) 
+    if (!result) {
+      res.status(404).json({error: "The product couldn't be found"}) 
+    } else {
+      res.status(200).json({status:'success', message:'Product updated successfully'})
+    }
+  }) 
+  
+  router.post('/', async (req, res)=> {
+    res.setHeader("Content-Type", "application/json") 
+    let product = req.body 
+    console.log(product)
+    if (!product.title || !product.description || !product.price || !product.code || !product.stock) {
+      return res.status(400).json({status: 'error', error: 'Incomplete data, make sure to enter all required fields'})
+    } 
     try {
-        const { pid } = req.params 
-        const product = await productMongo.getProductByIdMongo(pid) 
-        
-        res.status(201).json({ data: product }) 
+      await productMongo.addProduct(product) 
+      let updatedProducts = await productMongo.getProducts() 
+      io.emit('newProduct', updatedProducts.docs) 
+      res.status(200).json({ status: 'success', message:'Product added successfully' }) 
     } catch (error) {
-        res.status(500).json({ error: error.message }) 
+      res.status(400).json({status:'error', message: error.message}) 
     }
-}) 
+  })
 
-// Add a product
-router.post("/", uploader.single("thumbnail"), async (req, res) => {
-    try {
-        const productInfo = req.body 
-        const thumbnailFile = req.file ? req.file.filename : undefined 
-
-        productInfo.thumbnail = thumbnailFile 
-
-        const addedProduct = await productMongo.addProductMongo(productInfo) 
-        res.status(201).json({ data: addedProduct }) 
-    } catch (error) {
-        res.status(500).json({ error: error.message }) 
-    }
-}) 
-
-// Update a product
-router.put("/:pid", uploader.single("thumbnail"), async (req, res) => {
-    try {
-        const { pid } = req.params 
-        const updateFields = req.body 
-        const thumbnailFile = req.file ? req.file.filename : undefined 
-
-        updateFields.thumbnail = thumbnailFile 
-
-        const updatedProduct = await productMongo.updateProductMongo(pid, updateFields) 
-        res.status(201).json({ data: updatedProduct }) 
-    } catch (error) {
-        res.status(500).json({ error: error.message }) 
-    }
-}) 
-
-// Delete a product
-router.delete("/:pid", async (req, res) => {
-    try {
-        const { pid } = req.params 
-        const deletedProduct = await productMongo.delProductMongo(pid) 
-        res.status(200).json({ data: deletedProduct }) 
-    } catch (error) {
-        res.status(500).json({ error: error.message }) 
-    }
-}) 
 export {router as ProductRouterMongo}
