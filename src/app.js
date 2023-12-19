@@ -9,6 +9,7 @@ import { createServer } from 'http'
 import mongoose from "mongoose"
 import { ProductRouterMongo } from "./routes/products.mongo.js"
 import { cartRouterMongo } from "./routes/carts.mongo.js"
+import cookieParser from 'cookie-parser'
 
 
 const __filename = fileURLToPath(import.meta.url)
@@ -101,6 +102,9 @@ io.on('connection', socket=>{
         }
     })
 })
+
+const appCookie = express()
+appCookie.use(cookieParser())
 
 // const products = await productManager.getProducts()
 // io.emit("productsArray", products)
