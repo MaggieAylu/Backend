@@ -10,6 +10,10 @@ import mongoose from "mongoose"
 import { ProductRouterMongo } from "./routes/products.mongo.js"
 import { cartRouterMongo } from "./routes/carts.mongo.js"
 import cookieParser from 'cookie-parser'
+import session from "express-session"
+import MongoStore from 'connect-mongo'
+import dotenv from 'dotenv'
+import { sessionRouter } from './routes/sessions.js'
 
 
 const __filename = fileURLToPath(import.meta.url)
@@ -52,6 +56,7 @@ app.use(express.static(path.join(__dirname, "public")))
 
 app.use("/api/cartsmongo", cartRouterMongo)
 app.use("/api/productsmongo", ProductRouterMongo)
+app.use("/api/sessions",  sessionRouter)
 
 
 // Iniciar el servidor HTTP en lugar de app.listen
@@ -70,6 +75,8 @@ const server=app.listen(PORT,()=>{
 // })
 
 export const io=new Server(server)
+
+dotenv.config()
 
 try{
     await mongoose.connect('mongodb+srv://maggie:Houseofcards_22@cluster0.ecwxfro.mongodb.net/?retryWrites=true&w=majority',{dbName: 'desafio'})  
@@ -103,8 +110,93 @@ io.on('connection', socket=>{
     })
 })
 
-const appCookie = express()
-appCookie.use(cookieParser())
+
+app.use(cookieParser())
+
+app.use(session ({
+    store: MongoStore.create ({
+        mongoUrl: 'mongodb+srv://maggie:Houseofcards_22@cluster0.ecwxfro.mongodb.net/?retryWrites=true&w=majority',
+        ttl: 3000,
+    }),
+    secret: "Houseofcards_22",
+    resave: true,
+    saveUninitialized: true,
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 24,}
+}))
+
+
+app.get('/',(req,res)=>{
+
+    console.log(req.session)
+
+    let mensaje="Bienvenido"
+    if(req.session.contador){
+        req.session.contador++
+        mensaje+=`. Visitas totales a esta ruta: ${req.session.contador}`
+
+    }else{
+        req.session.contador=1
+    }
+
+    if(req.query.nombre){
+        mensaje=`Bienvenido ${req.query.nombre}`
+        if(req.session.usuario){
+            let indice=req.session.usuario.findIndex(u=>u.nombre===req.query.nombre)
+            if(indice===-1){
+                req.session.usuario.push({
+                    nombre:req.query.nombre,
+                     visitas:1
+                })
+            }else{
+                req.session.usuario[indice].visitas++
+                mensaje+=`. Usted ha ingresado a esta ruta en ${req.session.usuario[indice].visitas} oportunidades`
+            }
+        }else{
+            req.session.usuario=[
+                {
+                    nombre:req.query.nombre, 
+                    visitas: 1
+                }
+            ]
+        }
+    }
+
+    res.setHeader('Content-Type','text/plain') 
+    res.status(200).send(mensaje) 
+
+})
+
+app.get('/reset',(req,res)=>{
+    
+    req.session.destroy(error=>{
+        if(error){
+            res.setHeader('Content-Type','application/json') 
+            return res.status(500).json({error:`Error inesperado en el servidor - Intente más tarde, o contacte a su administrador`})
+        }
+    })
+
+    res.setHeader('Content-Type','application/json') 
+    res.status(200).json({
+        resultado:"Session reiniciada...!!!"
+    }) 
+}) 
+
+
+app.use(session(
+    {
+        secret:"codercoder123",
+        resave: true, saveUninitialized: true,
+        store: MongoStore.create(
+            {
+                mongoUrl:'mongodb+srv://backend49975:CoderCoder@cluster0.dxc9fdl.mongodb.net/?retryWrites=true&w=majority',
+                mongoOptions:{dbName:"clase19"},
+                ttl:3600
+            }
+        )
+    }
+))
+
 
 // const products = await productManager.getProducts()
 // io.emit("productsArray", products)
