@@ -6,7 +6,13 @@ const usuariosEsquema=new mongoose.Schema(
         email: {
             type: String, unique: true
         },
-        password: String
+        password: String,
+        usuario: String,
+        role: {
+            type: String,
+            enum: ["user", "admin"],
+            default: "user"
+        } 
     },
     {
         timestamps: {

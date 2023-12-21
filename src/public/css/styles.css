@@ -52,10 +52,11 @@ section{
 .titulo{
     text-align: center;
     font-size: 4rem;
-    color: #430064;
+    color: rgb(160, 95, 152);;
     padding: 1rem;
     margin: 2rem 0;
     background: rgba(255, 195, 205, 0.39);
+    margin-top: 190px;
 }
 .titulo span{
     color: var(--pink);
@@ -196,6 +197,77 @@ header .fa-bars{
 
 .productos .caja-contenedora .card:hover img{
     transform: scale(1.1);
+}
+
+.card{
+  text-align: center;
+  font-size: 3rem;
+  padding: 1rem;
+  margin: 2rem 0;
+  background: rgba(255, 195, 205, 0.39);
+  margin-top: 150px;
+  color: rgb(160, 95, 152);
+}
+
+.producto{
+  text-align: center;
+  font-size: 1rem;
+  padding: 1rem;
+  margin: 2rem 0;
+  background: rgba(255, 195, 205, 0.39);
+  margin-top: 150px;
+  color:#e84393
+}
+
+.pagination{
+  color: #430064;
+  font-size: 3rem;
+}
+
+.pagination:hover{
+  color: var(--pink);
+  bottom: 0;
+}
+
+.input{
+  border-color: #e84393;
+
+}
+
+.input .submit{
+  position: center;
+  bottom: -3rem; left: 2rem; right: 0;
+  text-align: center;
+  border-radius: 3rem;
+  display: flex;
+  height: 4rem;
+  line-height: 1rem;
+  font-size: 1.4rem;
+  width: 70%;
+  background: var(--pink);
+  color: #fff;
+}
+
+.input .submit:hover{
+  color: violet;
+}
+
+.button{
+  position: center;
+  bottom: -3rem; left: 2rem; right: 0;
+  text-align: center;
+  border-radius: 3rem;
+  display: flex;
+  height: 4rem;
+  line-height: 1rem;
+  font-size: 1.4rem;
+  width: 70%;
+  background: var(--pink);
+  color: #fff;
+}
+.button:hover{
+  bottom: 0; 
+  background: #430064;
 }
 
 .productos .caja-contenedora .card .cart-btn{

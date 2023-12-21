@@ -3,11 +3,24 @@ import { usuariosModelo } from '../dao/models/users.models.js'
 import crypto from 'crypto'
 
 
+
 export const router=Router()
 
 router.post('/login', async(req, res)=>{
-
     let {email, password}=req.body
+    const loginForm = req.body
+
+    if (loginForm.email === "adminCoder@coder.com" && loginForm.password === "adminCod3r123") {
+        req.session.email = loginForm.email
+        req.session.role = "admin"
+    } else {
+        let userData = await usuariosModelo.findOne({ email: loginForm.email })
+        if(!userData){
+            return res.render("login", { error: "The data entered are incorrect" })
+        }
+
+    }
+
     if(!email || !password){
         return res.redirect('/login?error=Complete todos los datos')
     }
@@ -19,11 +32,11 @@ router.post('/login', async(req, res)=>{
         return res.redirect(`/login?error=credenciales incorrectas`)
     }
     
-    req.session.usuario={
-        nombre:usuario.nombre, email:usuario.email
-    }
+    // req.session.usuario={
+    //     nombre:usuario.nombre, email:usuario.email
+    // }
 
-    res.redirect('/perfil')
+    res.redirect('/api/productsmongo')
 
 })
 
