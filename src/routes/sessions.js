@@ -36,7 +36,7 @@ router.post('/login', async(req, res)=>{
     //     nombre:usuario.nombre, email:usuario.email
     // }
 
-    res.redirect('/api/productsmongo')
+    res.redirect('/products')
 
 })
 

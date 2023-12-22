@@ -17,6 +17,7 @@ const socket=io()
 // })
 
 
+
 document.addEventListener('DOMContentLoaded', function () {
     const addToCartButtons = document.querySelectorAll('.add-to-cart') 
   
@@ -48,6 +49,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }) 
     }
 }) 
+
 
 
 // const cardProductsContainer = document.getElementById("cardProductsContainer")
