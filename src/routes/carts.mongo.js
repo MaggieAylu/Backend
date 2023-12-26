@@ -1,11 +1,11 @@
 import { Router } from 'express'
-import { CartMongo } from '../dao/Mongo/CartMongo.js'
+import { cartMongo } from '../index.js'
 
 export const router=Router()
 
 router.get("/", async (req, res) => { 
   res.setHeader("Content-Type", "application/json")
-  let carts = await  CartMongo.getCarts() 
+  let carts = await cartMongo.getCarts() 
   if (!carts) {
     res.status(400).json({error: 'Could not fetch carts'}) 
   } else {
@@ -16,7 +16,7 @@ router.get("/", async (req, res) => {
 router.get("/:cid", async (req, res) => { 
   res.setHeader("Content-Type", "application/json") 
   let id = req.params.cid  
-  let result = await  CartMongo.getCartById(id) 
+  let result = await  cartMongo.getCartById(id) 
   if (!result) {
     res.status(400).json({error: "The cart couldn't be found"}) 
   } else {
@@ -35,7 +35,7 @@ router.post("/:cid/product/:pid", async (req, res) => {
   if (!cartId || !productId) {
     return res.status(400).json({error: "The cart or product ID you entered is not a valid number"}) 
   }
-  let result = await  CartMongo.addProductToCart(cartId, product)
+  let result = await  cartMongo.addProductToCart(cartId, product)
   if (result){
     res.status(200).json({status:'success', message: "Product added to the cart successfully"})
   } else {
@@ -48,7 +48,7 @@ router.post("/", async (req,res) => {
   if (!products) {
     return res.status(400).json({status: 'error', error: "Incomplete data, make sure specify the products to be added to the cart"})
   } else {
-    let result = await  CartMongo.addCart(products) 
+    let result = await  cartMongo.addCart(products) 
     if (result) {
       res.status(200).json({status:'success', message: "Cart created successfully"})
     } else{
@@ -64,7 +64,7 @@ router.delete("/:cid/product/:pid", async (req, res) => {
   if (!cartId || !productId) {
     return res.status(400).json({error: "The cart or product ID you entered is not a valid number"}) 
   }
-  let result = await  CartMongo.deleteProductFromCart(cartId, productId)
+  let result = await  cartMongo.deleteProductFromCart(cartId, productId)
   if (result){
     res.status(200).json({status:'success', message: "Product deleted from cart successfully"})
   } else {
@@ -78,7 +78,7 @@ router.delete("/:cid", async (req, res) => {
   if (!cartId) { 
     return res.status(400).json({error: "Please provide a valid cart ID"}) 
   }
-  let result = await  CartMongo.emptyCart(cartId) 
+  let result = await  cartMongo.emptyCart(cartId) 
   if (result) { 
     res.status(200).json({status: 'success', message: "Cart deleted successfully"}) 
   } else {
@@ -93,7 +93,7 @@ router.put('/:cid', async (req, res) => {
   if (!products) {
     return res.status(400).json({status: 'error', error: "Incomplete data, make sure specify the products to be added to the cart"})
   } else {
-    let result = await  CartMongo.updateCart(cartId, products) 
+    let result = await  cartMongo.updateCart(cartId, products) 
     if (result) {
       res.status(200).json({status:'success', message: "Cart updated successfully"})
     } else{
@@ -111,7 +111,7 @@ router.put('/:cid/product/:pid', async (req, res) => {
   if (!cartId || !productId || !quantity || !Number.isInteger(quantity)) {
     return res.status(400).json({status: 'error', error: "Incomplete data, make sure specify the quantity of the product to be updated"})
   } else {
-    let result = await  CartMongo.updateProductQuantityCart(cartId, productId, quantity) 
+    let result = await  cartMongo.updateProductQuantityCart(cartId, productId, quantity) 
     if (result) {
       res.status(200).json({status:'success', message: "Product quantity in Cart updated successfully"})
     } else{

@@ -1,7 +1,9 @@
 import { Router } from 'express' 
 import { usuariosModelo } from '../dao/models/users.models.js' 
 import crypto from 'crypto'
-
+import { isValidPassword } from '../utils.js'
+import { createHash } from '../utils.js'
+import passport from 'passport'
 
 
 export const router=Router()
@@ -32,9 +34,9 @@ router.post('/login', async(req, res)=>{
         return res.redirect(`/login?error=credenciales incorrectas`)
     }
     
-    // req.session.usuario={
-    //     nombre:usuario.nombre, email:usuario.email
-    // }
+    req.session.usuario={
+        nombre:usuario.nombre, email:usuario.email
+    }
 
     res.redirect('/products')
 
@@ -47,7 +49,7 @@ router.post('/signup',async(req,res)=>{
         return res.redirect('/signup?error=Complete todos los datos')
     }
 
-    let regMail=/^(([^<>()\[\]\\., :\s@”]+(\.[^<>()\[\]\\., :\s@”]+)*)|(“.+”))@((\[[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}])|(([a-zA-Z\-0–9]+\.)+[a-zA-Z]{2,}))$/
+    let regMail=/^(([^<>()\[\]\\.,;:\s@”]+(\.[^<>()\[\]\\.,;:\s@”]+)*)|(“.+”))@((\[[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}])|(([a-zA-Z\-0–9]+\.)+[a-zA-Z]{2,}))$/
     console.log(regMail.test(email))
     if(!regMail.test(email)){
         return res.redirect('/signup?error=Mail con formato incorrecto...!!!')
@@ -83,3 +85,4 @@ router.get('/logout',(req,res)=>{
 }) 
 
 export {router as sessionRouter}
+
