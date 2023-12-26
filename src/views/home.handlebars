@@ -33,7 +33,7 @@
         </tr>
       </thead>
       <tbody>
-        {{#each producto}}
+        {{#each productos}}
           <tr class="producto">
             <td>{{this._id}}</td>
             <td>{{this.title}}</td>
@@ -47,17 +47,6 @@
         {{/each}}
       </tbody>
     </table>
-    {{!-- Links to pagination --}}
-    <div class="pagination">
-      <a href="/products?limit={{limit}}&page=1" class="pagination">First Page</a>
-      {{#if hasPrevPage}}
-        <a href="/products?limit={{limit}}&page={{prevPage}}" class="pagination">Prev Page</a>
-      {{/if}}
-      {{#if hasNextPage}}
-        <a href="/products?limit={{limit}}&page={{nextPage}}" class="pagination">Next Page</a>
-      {{/if}}
-      <a href="/products?limit={{limit}}&page={{totalPages}}" class="pagination">Last Page</a>
-    </div>
 </div>
 
 <script src="/js/productos.js"></script>

@@ -2,6 +2,16 @@ import { ProductModel } from "../models/products.model.js"
 
 
 export class ProductMongo{
+
+  async getProductsMongo() {
+    try {
+      return await ProductModel.find({ deleted: false }).lean()
+    } catch (error) {
+      console.log(error.messsage)
+      return null
+    }
+  }
+
   async getProducts(limit=10, page=1, query={}, sort={}) { // Retrieves the products in the database
     try {
       //console.log(`Queries received in PRODUCT MANAGER: LIMIT: ${limit}, PAGE: ${page}, QUERY: ${query}, SORT: ${sort}`) 
