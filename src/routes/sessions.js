@@ -10,13 +10,16 @@ export const router=Router()
 
 router.post('/login', async(req, res)=>{
     let {email, password}=req.body
-    const loginForm = req.body
-
-    if (loginForm.email === "adminCoder@coder.com" && loginForm.password === "adminCod3r123") {
-        req.session.email = loginForm.email
-        req.session.role = "admin"
+    if (email === "adminCoder@coder.com" && password === "adminCod3r123") {
+                req.session.email = email
+                req.session.role = "admin"
+                req.session.usuario = {
+                    nombre: "Admin",
+                    email: "adminCoder@coder.com"
+                }
+        return res.redirect('/products') 
     } else {
-        let userData = await usuariosModelo.findOne({ email: loginForm.email })
+        let userData = await usuariosModelo.findOne({ email })
         if(!userData){
             return res.render("login", { error: "The data entered are incorrect" })
         }
@@ -32,6 +35,10 @@ router.post('/login', async(req, res)=>{
     let usuario=await usuariosModelo.findOne({email, password})
     if(!usuario){
         return res.redirect(`/login?error=credenciales incorrectas`)
+    }
+
+    if (email !== "adminCoder@coder.com" && password !== "adminCod3r123"){
+        req.session.role= "user"
     }
     
     req.session.usuario={
