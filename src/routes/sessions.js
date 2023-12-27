@@ -75,13 +75,13 @@ router.get('/errorGithub',(req,res)=>{
 
 // })
 
-// router.get('/errorSignup',(req,res)=>{
-//     return res.redirect('/signup?error=Error en el proceso de registro')
-// })
+router.get('/errorSignup',(req,res)=>{
+    return res.redirect('/signup?error=Error en el proceso de registro')
+})
 
-// router.post('/signup', passport.authenticate('signup', {failureRedirect:'/api/sessions/errorSignup'}), async(req,res)=>{
+router.post('/signup', passport.authenticate('signup', {failureRedirect:'/api/sessions/errorSignup'}), async(req,res)=>{
 
-//     let {email}=req.body
+    let {email}=req.body
 //     // let {nombre, email, password}=req.body
 //     // if(!nombre || !email || !password){
 //     //     return res.redirect('/signup?error=Complete todos los datos')
@@ -108,9 +108,9 @@ router.get('/errorGithub',(req,res)=>{
 //     //     res.redirect('/signup?error=Error inesperado. Reintente en unos minutos')
 //     // }
 
-//     res.redirect(`/login?message=Usuario ${email} registrado correctamente`)
+    res.redirect(`/login?message=Usuario ${email} registrado correctamente`)
 
-// })
+})
 
 router.get('/logout',(req,res)=>{
     
