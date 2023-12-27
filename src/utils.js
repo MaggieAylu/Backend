@@ -4,7 +4,7 @@ import multer from "multer"
 import bcrypt from 'bcrypt'
 
 export const createHash = password => bcrypt.hashSync(password,bcrypt.genSaltSync(10))
-export const isValidPassword = (user,password) => bcrypt.compareSync(password, user.password)
+export const isValidPassword = (usuario,password) => bcrypt.compareSync(password, usuario.password)
 export const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 const storage = multer.diskStorage ({

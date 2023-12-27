@@ -14,6 +14,14 @@ const auth=(req, res, next)=>{
     next()
 }
 
+const auth2=(req, res, next)=>{
+    if(req.session.usuario){
+        return res.redirect('/profile')
+    }
+
+    next()
+}
+
 
 router.get('/', auth, async (req,res)=>{
     try{
@@ -82,35 +90,25 @@ router.get('/chat',(req,res)=>{
 
 
 
-
-// const auth2=(req, res, next)=>{
-//     if(req.session.usuario){
-//         return res.redirect('/profile')
-//     }
-
-//     next()
-// }
-
 router.get('/', auth, (req,res)=>{
-
-    res.setHeader('Content-Type','text/html')
-    res.status(200).render('home') //, {login:req.session.usuario?true:false}
+    // res.setHeader('Content-Type','text/html')
+    res.status(200).render('home')  //, {login:req.session.usuario?true:false})
 })
 
-router.get('/signup',(req,res)=>{
+router.get('/signup', auth2, (req,res)=>{
 
     let {error}=req.query
 
     res.setHeader('Content-Type','text/html')
-    res.status(200).render('signup', {error}) //, login:false
+    res.status(200).render('signup', {error, login:false})
 })
 
-router.get('/login', (req,res)=>{
+router.get('/login', auth2, (req,res)=>{
 
     let {error, mensaje}=req.query
 
-    res.setHeader('Content-Type','text/html')
-    res.status(200).render('login', {error, mensaje}) //, login:false
+    // res.setHeader('Content-Type','text/html')
+    res.status(200).render('login') //, {error, mensaje, login:false})
 })
 
 router.get('/profile', auth, (req,res)=>{
@@ -118,7 +116,7 @@ router.get('/profile', auth, (req,res)=>{
     let usuario=req.session.usuario
 
     res.setHeader('Content-Type','text/html')
-    res.status(200).render('profile', {usuario}) //, login:true
+    res.status(200).render('profile', {usuario, login:true})
 })
 
 
