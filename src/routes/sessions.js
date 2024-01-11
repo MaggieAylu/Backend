@@ -1,32 +1,57 @@
 import { Router } from 'express' 
 import { usuariosModelo } from '../dao/models/users.models.js' 
 // import crypto from 'crypto'
-import { isValidPassword } from '../utils.js'
+import { generaToken, isValidPassword, passportCall } from '../utils.js'
 import { createHash } from '../utils.js'
 import passport from 'passport'
+import local from 'passport-local'
+import { MyRouter } from './router.js'
 
 
-export const router=Router()
+// export const router=Router()
 
-router.get('/github', passport.authenticate('github',{}), (req,res)=>{})
+export class SessionsRouter extends MyRouter{
+    init(){
+        this.post("/signup", ["PUBLIC"], passportCall("signup"), (req,res)=>{
 
-router.get('/callbackGithub', passport.authenticate('github',{failureRedirect:"/api/sessions/errorGithub"}), (req,res)=>{
+            return res.successAlta("Registro correcto...!!!", req.user)
+        })
+
+        this.post("/login", ["PUBLIC"], passportCall("login"), (req,res)=>{
+
+            let token=generaToken(req.user)
+            res.cookie("cookie", token, {httpOnly:true, maxAge: 1000*60*60})
+            return res.success(`Login correcto para el usuario ${req.user.nombre}, con rol: ${req.user.role}`)
+        })
+
+        this.get("/current", ["PUBLIC"], passportCall("current"), (req,res)=>{
+            if(!req.user){
+                return res.status(401).json({ error: 'No se encontró el usuario actual' }) 
+            }
+            res.status(200).json({ user: req.user })
+        })
+    }
+}
+
+// router.get('/github', passport.authenticate('github',{}), (req,res)=>{})
+
+// router.get('/callbackGithub', passport.authenticate('github',{failureRedirect:"/api/sessions/errorGithub"}), (req,res)=>{
     
-    console.log(req.user)
-    req.session.usuario=req.user
-    res.setHeader('Content-Type','application/json')
-    res.status(200).json({
-        message:"Acceso OK...!!!", usuario: req.user
-    })
-})
+//     console.log(req.user)
+//     req.session.usuario=req.user
+//     res.setHeader('Content-Type','application/json')
+//     res.status(200).json({
+//         message:"Acceso OK...!!!", usuario: req.user
+//     })
+// })
 
-router.get('/errorGithub',(req,res)=>{
+// router.get('/errorGithub',(req,res)=>{
     
-    res.setHeader('Content-Type','application/json')
-    res.status(200).json({
-        error: "Error al autenticar con Github"
-    })
-})
+//     res.setHeader('Content-Type','application/json')
+//     res.status(200).json({
+//         error: "Error al autenticar con Github"
+//     })
+// })
 
 // router.get('/errorLogin', (req,res)=>{
 //     return res.redirect('/login?error=Error en el proceso de login... :(')
@@ -75,13 +100,13 @@ router.get('/errorGithub',(req,res)=>{
 
 // })
 
-router.get('/errorSignup',(req,res)=>{
-    return res.redirect('/signup?error=Error en el proceso de registro')
-})
+// router.get('/errorSignup',(req,res)=>{
+//     return res.redirect('/signup?error=Error en el proceso de registro')
+// })
 
-router.post('/signup', passport.authenticate('signup', {failureRedirect:'/api/sessions/errorSignup'}), async(req,res)=>{
+// router.post('/signup', passport.authenticate('signup', {failureRedirect:'/api/sessions/errorSignup'}), async(req,res)=>{
 
-    let {email}=req.body
+//     let {email}=req.body
 //     // let {nombre, email, password}=req.body
 //     // if(!nombre || !email || !password){
 //     //     return res.redirect('/signup?error=Complete todos los datos')
@@ -108,21 +133,23 @@ router.post('/signup', passport.authenticate('signup', {failureRedirect:'/api/se
 //     //     res.redirect('/signup?error=Error inesperado. Reintente en unos minutos')
 //     // }
 
-    res.redirect(`/login?message=Usuario ${email} registrado correctamente`)
+//     res.redirect(`/login?message=Usuario ${email} registrado correctamente`)
 
-})
+// })
 
-router.get('/logout',(req,res)=>{
+// router.get('/logout',(req,res)=>{
     
-    req.session.destroy(error=>{
-        if(error){
-            res.redirect('/login?error=fallo en el logout')
-        }
-    })
+//     req.session.destroy(error=>{
+//         if(error){
+//             res.redirect('/login?error=fallo en el logout')
+//         }
+//     })
 
-    res.redirect('/login')
+//     res.redirect('/login')
 
-}) 
+// }) 
 
-export {router as sessionRouter}
+// export {router as sessionRouter}
+
+
 

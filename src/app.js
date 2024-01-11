@@ -13,7 +13,8 @@ import cookieParser from 'cookie-parser'
 import session from "express-session"
 import MongoStore from 'connect-mongo'
 import dotenv from 'dotenv'
-import { sessionRouter } from './routes/sessions.js'
+// import { sessionRouter } from './routes/sessions.js'
+import { SessionsRouter } from "./routes/sessions.js"
 import { inicializarPassport } from "./config/passport.config.js"
 import passport from 'passport'
 import { usuariosModelo } from "./dao/models/users.models.js"
@@ -31,7 +32,7 @@ const socketServer = new Server(httpServer)
 const PORT = 8080
 const app = express()
 
-app.use(cookieParser())
+const sessionsRouter=new SessionsRouter()
 
 app.use(session ({
     store: MongoStore.create ({
@@ -53,9 +54,10 @@ app.set('views', path.join(__dirname, 'views'))
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+app.use(cookieParser())
 inicializarPassport()
 app.use(passport.initialize())
-app.use(passport.session())
+// app.use(passport.session())
 
 app.use(express.static(path.join(new URL('/', import.meta.url).pathname, 'public')))
 
@@ -77,7 +79,7 @@ app.use(express.static(path.join(__dirname, "public")))
 
 app.use("/api/cartsmongo", cartRouterMongo)
 app.use("/api/productsmongo", ProductRouterMongo)
-app.use("/api/sessions",  sessionRouter)
+app.use("/api/sessions",  sessionsRouter.getRouter())
 
 
 // Iniciar el servidor HTTP en lugar de app.listen
@@ -130,4 +132,5 @@ io.on('connection', socket=>{
         }
     })
 })
+
 
