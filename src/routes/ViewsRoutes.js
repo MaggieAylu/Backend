@@ -115,7 +115,7 @@ router.get('/profile', auth, (req,res)=>{
 
     let usuario=req.session.usuario
 
-    res.setHeader('Content-Type','text/html')
+    // res.setHeader('Content-Type','text/html')
     res.status(200).render('profile', {usuario, login:true})
 })
 

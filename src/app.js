@@ -64,8 +64,8 @@ app.use(express.static(path.join(new URL('/', import.meta.url).pathname, 'public
 app.use('/', viewsRouter)
 app.use('/api/products', (req, res, next)=>{
     req.codigo='007'
-    if(req.query.nombre){
-        req.query.nombre=req.query.nombre.toLowerCase()
+    if(req.query.first_name){
+        req.query.first_name=req.query.first_name.toLowerCase()
     }
     req.io= io
     next()
@@ -132,5 +132,4 @@ io.on('connection', socket=>{
         }
     })
 })
-
 

@@ -396,7 +396,7 @@ header .fa-bars{
     background: var(--pink);
 }
 
-.cart-btn{
+.add-to-cart{
     display: inline-block;
     margin-top: 1rem;
     border-radius: 5rem;
@@ -407,7 +407,7 @@ header .fa-bars{
     font-size: 1.7rem;
     text-align: center;
 }
-.cart-btn:hover{
+.add-to-cart:hover{
     background: var(--pink);
 }
 
@@ -1428,6 +1428,11 @@ header .fa-bars{
     }
   }
 
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
 
 
 

@@ -2,12 +2,12 @@ import mongoose, { Schema } from "mongoose"
 
 const usuariosEsquema=new mongoose.Schema(
     {
-        nombre: String,
-        apellido: String,
+        first_name: String,
+        last_name: String,
         email: {
             type: String, unique: true
         },
-        edad: Number,
+       age: Number,
         password: String,
         usuario: String,
         role: {

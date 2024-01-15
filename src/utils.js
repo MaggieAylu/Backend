@@ -11,17 +11,15 @@ export const createHash = (password) => bcrypt.hashSync(password,bcrypt.genSaltS
 export const isValidPassword = (usuario,password) => bcrypt.compareSync(password, usuario.password)
 export const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-const storage = multer.diskStorage ({
-    destination: (req, file, cb) => {
-        cb(null, path.join(__dirname, "/imagenes"))
-    },
+// const storage = multer.diskStorage ({
+//     destination: (req, file, cb) => {
+//         cb(null, path.join(__dirname, "/imagenes"))
+//     },
 
-    filename: (req, file, cb) => {
-        cb(null, `${Date.now()}-${file.originalname}`)
-    }
-})
-
-export const generaToken=(usuario)=>jwt.sign({...usuario}, SECRETKEY, {expiresIn: "1h"})
+//     filename: (req, file, cb) => {
+//         cb(null, `${Date.now()}-${file.originalname}`)
+//     }
+// })
 
 export const passportCall=(estrategia)=>{
     return function(req, res, next) {
@@ -35,6 +33,10 @@ export const passportCall=(estrategia)=>{
         })(req, res, next)
       }
 }
+
+export const generaToken=(usuario)=>jwt.sign({...usuario}, SECRETKEY, {expiresIn: "1h"})
+
+
 
 
 

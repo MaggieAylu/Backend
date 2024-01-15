@@ -2,7 +2,7 @@
   <header>
         <input type="checkbox" name="" id="toggler">
         <label for="toggler" class="fas fa-bars"></label>
-        <a href="#" class="logo">Claire de lune <span>.</span></a>
+        <div class="logo">Claire de lune <span>.</span></div>
         <nav class="nav">
             <a href="/">Home</a>
             <a href="/realtimeproducts">Real Time Products</a>
@@ -17,7 +17,7 @@
             </div>
     </header>
     <h1 class="titulo">Products Page</h1>
-    <h2>¡Bienvenido {{usuario.nombre}}! tu rol es: {{usuario.role}}</h2>
+    <h2>¡Bienvenido {{usuario.first_name}}! tu rol es: {{usuario.role}}</h2>
 
     <table>
       <thead class="card">
@@ -42,7 +42,7 @@
             <td>{{this.code}}</td>
             <td>{{this.stock}}</td>
             <td>{{this.status}}</td>
-            <th> <button class="button"data-product-id="{{this._id}}">Add to Cart</button></th>
+            <th> <button class="add-to-cart"data-product-id="{{this._id}}">Add to Cart</button></th>
           </tr>
         {{/each}}
       </tbody>
@@ -61,3 +61,4 @@
 </div>
 
 <script src="/js/productos.js"></script>
+<script src="/js/AddToCart.js"></script>

@@ -1,4 +1,4 @@
-const addToCartBtn = document.querySelectorAll(".btn-add-to-cart")
+const addToCartBtn = document.querySelectorAll(".add-to-cart")
 
 addToCartBtn.forEach(async (btn) => {
     btn.addEventListener("click", async (e) => {
@@ -6,7 +6,7 @@ addToCartBtn.forEach(async (btn) => {
         const productId = e.target.getAttribute("data-product-id")
         const productTitle = e.target.getAttribute("data-product-title")
 
-        const response = await fetch(`/api/carts/${cartId}/product/${productId}`, {
+        const response = await fetch(`/api/cartsmongo/${cartId}/product/${productId}`, {
             method: "POST"
         })
         

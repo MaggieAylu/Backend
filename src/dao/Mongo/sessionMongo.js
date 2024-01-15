@@ -7,7 +7,7 @@ export class SessionManagerDB{
     }
     async getUsuarios(){
         try {
-            let data = await  usuariosModelo.find(nombre) 
+            let data = await  usuariosModelo.find(first_name) 
             return data
         } catch (error) {
             if (error) {

@@ -61,19 +61,19 @@ export const inicializarPassport=()=>{
         },
         async(req, username, password, done)=>{
             try {
-                let {nombre, apellido, edad, role, email}=req.body
-                if(!nombre || !apellido || !edad || !email){
-                    return done(null, false, {message:"Complete nombre, apellido, edad, email, y password"})
+                let {first_name, last_name, age, role, email}=req.body
+                if(!first_name || !last_name || !age || !email){
+                    return done(null, false, {message:"Complete first name, last name, age, email, and password"})
                 }
 
                 let existe=await usuariosModelo.findOne({email}).lean()
                 if(existe){
-                    return done(null, false, {message:`Ya existe el usuario con email ${email}`})
+                    return done(null, false, {message:`Already exists an user with email ${email}`})
                 }
 
                 let nuevoUsuario=await usuariosModelo.create(
                     {
-                        nombre, apellido, edad, role, email, 
+                        first_name, last_name, age, role, email, 
                         password: createHash(password)
                     }
                 )

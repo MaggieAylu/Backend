@@ -14,14 +14,20 @@ export class SessionsRouter extends MyRouter{
     init(){
         this.post("/signup", ["PUBLIC"], passportCall("signup"), (req,res)=>{
 
-            return res.successAlta("Registro correcto...!!!", req.user)
+            return res.redirect("/login")
+            
         })
 
         this.post("/login", ["PUBLIC"], passportCall("login"), (req,res)=>{
 
             let token=generaToken(req.user)
-            res.cookie("cookie", token, {httpOnly:true, maxAge: 1000*60*60})
-            return res.success(`Login correcto para el usuario ${req.user.nombre}, con rol: ${req.user.role}`)
+            if (token) {
+                res.cookie("cookie", token, {httpOnly:true, maxAge: 1000*60*60})
+                res.redirect("/products")
+            } else {
+                res.status(500).send("Error al generar el token")
+            }
+            
         })
 
         this.get("/current", ["PUBLIC"], passportCall("current"), (req,res)=>{

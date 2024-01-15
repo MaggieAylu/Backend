@@ -1,6 +1,6 @@
 console.log("cargo de productos.js")
 
-const socket=io()
+// const socket=io()
 
 // socket.on("nuevoProducto", producto=>{
 //     console.log("viene importado:", producto)
@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function () {
   
     function addToCart(productId) {
       const cartId = '6577ad616076d24fea73553e'  
-      const url = `http://localhost:8080/api/cartsMongo/${cartId}/product/${productId}` 
+      const url = `http://localhost:8080/api/cartsmongo/${cartId}/product/${productId}` 
   
       fetch(url, {
         method: 'POST',

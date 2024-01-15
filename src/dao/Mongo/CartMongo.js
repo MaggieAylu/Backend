@@ -87,7 +87,7 @@ export class CartMongo {
 
   async addProductToCart(cartId, { productId, quantity }) { // Adds a product to a cart. If the product is already in the cart, increase its quantity
     try {
-      if (!cartId || !productId || !quantity || !await  ProductMongo.checkProductById(productId)) { // Check if the product ID is invalid or doesn't exist in the list of products
+      if (!cartId || !productId || !quantity || await  ProductMongo.checkProductById(productId)) { // Check if the product ID is invalid or doesn't exist in the list of products
         console.log(' You entered invalid data, the product ID is incorrect or it does not exists in the product DB') 
         return false 
       } else {
