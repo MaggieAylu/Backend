@@ -2,21 +2,31 @@ import {Router} from 'express'
 import { productMongo } from "../index.js"
 import { sessionManager } from '../index.js'
 import { usuariosModelo } from '../dao/models/users.models.js'
+import jwt  from 'jsonwebtoken'
+import { SECRETKEY } from '../utils.js'
+import { buscaToken } from '../config/passport.config.js'
 
 export const router=Router()
 
-
 const auth=(req, res, next)=>{
-    if(!req.session.usuario){
-        res.redirect('/login')
+    const token = req.cookies.cookie
+    if (!token) {
+        return res.redirect('/login')
     }
+    try {
+        const decoded = jwt.verify(token, SECRETKEY) 
 
-    next()
+        req.usuario = decoded.usuario
+
+        next()
+    } catch (error) {
+        return res.redirect('/login')
+    }
 }
 
 const auth2=(req, res, next)=>{
-    if(req.session.usuario){
-        return res.redirect('/profile')
+    if(req.user){
+        return res.redirect('/products')
     }
 
     next()
@@ -37,17 +47,15 @@ router.get('/', auth, async (req,res)=>{
 })
 
 
-router.get('/products', async (req,res) => {
+router.get('/products', auth2, async (req,res) => {
     try {
-      let usuario=req.session.usuario
-      let role = req.session.role
+      let usuario = req.usuario
       let {limit=10, page=1, sort, query} = req.query 
       console.log(`Queries received in view router LIMIT: ${limit}, PAGE: ${page}, QUERY: ${query}, SORT: ${sort}`) 
       let products = await productMongo.getProducts( limit, page, query, sort)  
       let {totalPages, hasNextPage, hasPrevPage, prevPage, nextPage} = products
       console.log('Pagination values from DB: ', totalPages, hasNextPage, hasPrevPage, prevPage, nextPage)  
       res.status(200).render('products' , {
-        role,
         usuario,
         data: products.docs,
         totalPages, hasNextPage, hasPrevPage, prevPage, nextPage, limit, page, sort, query
@@ -113,7 +121,7 @@ router.get('/login', auth2, (req,res)=>{
 
 router.get('/profile', auth, (req,res)=>{
 
-    let usuario=req.session.usuario
+    let usuario=req.usuario
 
     // res.setHeader('Content-Type','text/html')
     res.status(200).render('profile', {usuario, login:true})

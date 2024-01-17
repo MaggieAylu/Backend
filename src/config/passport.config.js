@@ -6,7 +6,7 @@ import github from 'passport-github2'
 import jwt from 'passport-jwt'
 
 
-const buscaToken=(req)=>{
+export const buscaToken=(req)=>{
     let token=null
     if(req.cookies.cookie){
         token=req.cookies.cookie

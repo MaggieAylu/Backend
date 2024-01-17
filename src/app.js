@@ -34,17 +34,17 @@ const app = express()
 
 const sessionsRouter=new SessionsRouter()
 
-app.use(session ({
-    store: MongoStore.create ({
-        mongoUrl: 'mongodb+srv://maggie:Houseofcards_22@cluster0.ecwxfro.mongodb.net/?retryWrites=true&w=majority',
-        ttl: 3000,
-    }),
-    secret: "Houseofcards_22",
-    resave: true,
-    saveUninitialized: true,
-    cookie: {
-        maxAge: 1000 * 60 * 60 * 24,}
-}))
+// app.use(session ({
+//     store: MongoStore.create ({
+//         mongoUrl: 'mongodb+srv://maggie:Houseofcards_22@cluster0.ecwxfro.mongodb.net/?retryWrites=true&w=majority',
+//         ttl: 3000,
+//     }),
+//     secret: "Houseofcards_22",
+//     resave: true,
+//     saveUninitialized: true,
+//     cookie: {
+//         maxAge: 1000 * 60 * 60 * 24,}
+// }))
 
 
 app.engine('handlebars', engine())
