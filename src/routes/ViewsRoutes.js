@@ -47,9 +47,9 @@ router.get('/', auth, async (req,res)=>{
 })
 
 
-router.get('/products', auth2, async (req,res) => {
+router.get('/products', auth, async (req,res) => {
     try {
-      let usuario = req.usuario
+      let usuario = req.user
       let {limit=10, page=1, sort, query} = req.query 
       console.log(`Queries received in view router LIMIT: ${limit}, PAGE: ${page}, QUERY: ${query}, SORT: ${sort}`) 
       let products = await productMongo.getProducts( limit, page, query, sort)  
