@@ -1,6 +1,6 @@
 import {Router} from 'express'
-import { productMongo } from "../index.js"
-import { sessionManager } from '../index.js'
+import { productMongo } from "../dao/index.js"
+import { sessionManager } from '../dao/index.js'
 import { usuariosModelo } from '../dao/models/users.models.js'
 import jwt  from 'jsonwebtoken'
 import { SECRETKEY } from '../utils.js'

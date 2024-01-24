@@ -8,26 +8,26 @@ export class CartMongo {
       return await cartsModel.find({deleted:false}).populate('products.productId') 
     } catch (error) {
       if (error) {
-        console.log(error)  // There aren't any products or there was an error
+        console.log(error)  
         return null 
       }
     }
   }
 
-  async getCartById(id) { // Checks if a cart exists and returns the cart
+  async getCartById(id) {
     try {
       let cart = await cartsModel.findOne({_id:id},{lean:true}).populate('products.productId') 
       if (!cart) {
         console.log('Cart with ID not found: ', id) 
       }
-      return cart  // Return the found cart
+      return cart  
     } catch (error) {
       console.log('Error getting the cart with ID: ', id) 
       throw new Error('Error getting the cart with ID: ', id) 
     }
   }
 
-  async getProductInCart(id) { // Checks if a product ID is already present in a cart
+  async getProductInCart(id) { 
     try {
       if (!await  ProductMongo.checkProductById(productId)){
         return false
@@ -46,19 +46,19 @@ export class CartMongo {
     }
   }
 
-  async addCart({products}) { // Creates a new cart with products and adds it to the database
+  async addCart({products}) { 
     try{
-      for (let element of products) { // Checks that every product in the array is valid 
+      for (let element of products) { 
         if (!element.productId || !element.quantity) {
           return false
         } else {
-          if(!await  ProductMongo.checkProductById(element.productId)){ // Checks that every product exists in the list of products before it can be added to the cart
+          if(!await  ProductMongo.checkProductById(element.productId)){ 
             console.log(`The product with ID ${element.productId} doesn't exist so it cannot be added to the cart`)
             return false
           }
         }
       }  
-      let carts = await cartsModel.find().lean()  // Get all carts (even deleted ones) so that the ID can be set properly
+      let carts = await cartsModel.find().lean() 
       console.log('Current carts in the DB: ', carts)
       let cartId = 1 
       if (carts.length > 0) {
@@ -85,9 +85,9 @@ export class CartMongo {
     }
   }
 
-  async addProductToCart(cartId, { productId, quantity }) { // Adds a product to a cart. If the product is already in the cart, increase its quantity
+  async addProductToCart(cartId, { productId, quantity }) { 
     try {
-      if (!cartId || !productId || !quantity || await  ProductMongo.checkProductById(productId)) { // Check if the product ID is invalid or doesn't exist in the list of products
+      if (!cartId || !productId || !quantity || await  ProductMongo.checkProductById(productId)) { 
         console.log(' You entered invalid data, the product ID is incorrect or it does not exists in the product DB') 
         return false 
       } else {
@@ -96,7 +96,7 @@ export class CartMongo {
           console.log("Cart not found") 
           return false 
         }
-        const productsIndex = cartFound.products.findIndex(product => product.productId.equals(productId)) // Finds and retrieves the index of the product we are going to update (if it exists)
+        const productsIndex = cartFound.products.findIndex(product => product.productId.equals(productId)) 
         if (productsIndex === -1){
           console.log('The product does not exists in the cart, so it will be added') 
           const newProduct = {productId: productId, quantity: quantity} 
@@ -125,15 +125,15 @@ export class CartMongo {
     }
   }
 
-  async deleteProductFromCart (cartId, productId) { // Deletes a single product from a cart
+  async deleteProductFromCart (cartId, productId) { 
 
     try {
-      let cartFound = await cartsModel.findOne({_id:cartId, deleted:false})  // Fetch the cart we are looking for
+      let cartFound = await cartsModel.findOne({_id:cartId, deleted:false})  
       if (!cartFound) {
         console.log("Cart not found") 
         return false 
       }
-      const productsIndex = cartFound.products.findIndex(product => product.productId.equals(productId)) // Finds and retrieves the index of the product we are going to delete (if it exists)
+      const productsIndex = cartFound.products.findIndex(product => product.productId.equals(productId)) 
       if (productsIndex === -1){
         console.log('The product does not exists in the cart you specified')
         return false
@@ -151,9 +151,9 @@ export class CartMongo {
 
   }
 
-  async emptyCart (cartId) { // Deletes all the products from a cart
+  async emptyCart (cartId) { 
     try {
-      let cartFound = await cartsModel.findOne({_id:cartId, deleted:false})  // Fetch the cart we are looking for
+      let cartFound = await cartsModel.findOne({_id:cartId, deleted:false})  
       if (!cartFound) {
         console.log("Cart not found") 
         return false 
@@ -169,19 +169,19 @@ export class CartMongo {
     }
   }
 
-  async updateCart (cartId, {products}) { // Updates a cart with the products sent via body
+  async updateCart (cartId, {products}) { 
     try {
-      let cartFound = await cartsModel.findOne({_id:cartId, deleted:false})  // Fetch the cart we are looking for
+      let cartFound = await cartsModel.findOne({_id:cartId, deleted:false})  
       if (!cartFound) {
         console.log("Cart not found") 
         return false 
       }
-      for (let element of products) { // Checks that every product in the array is valid 
+      for (let element of products) { 
         if (!element.productId || !element.quantity) {
           console.log('Missing product ID or quantity') 
           return false
         } else {
-          if(!await  ProductMongo.checkProductById(element.productId)){ // Checks that every product exists in the list of products before it can be added to the cart
+          if(!await  ProductMongo.checkProductById(element.productId)){ 
             console.log(`The product with ID ${element.productId} doesn't exist so it cannot be added to the cart`)
             return false
           }
@@ -200,12 +200,12 @@ export class CartMongo {
 
   async updateProductQuantityCart (cartId, productId, quantity) {
     try {
-      let cartFound = await cartsModel.findOne({_id:cartId, deleted:false})  // Fetch the cart we are looking for
+      let cartFound = await cartsModel.findOne({_id:cartId, deleted:false}) 
       if (!cartFound) {
         console.log("Cart not found") 
         return false 
       }
-      const productsIndex = cartFound.products.findIndex(product => product.productId.equals(productId)) // Finds and retrieves the index of the product we are going to update (if it exists)
+      const productsIndex = cartFound.products.findIndex(product => product.productId.equals(productId)) 
         if (productsIndex === -1){
           console.log('The product does not exists in the cart, so it cannot be updated') 
           return false 
@@ -225,7 +225,7 @@ export class CartMongo {
     }
   }
 
-  async deleteCart(cartId) { // Deletes a cart from the DB from its ID
+  async deleteCart(cartId) { 
     try {
       let result = await cartsModel.deleteOne({_id:cartId}) 
       console.log(result) 
@@ -236,143 +236,4 @@ export class CartMongo {
     }
   }
 }
-//   constructor() {
-//       this.model = cartsModel
-//   }
 
-//   // Get all carts
-//   async getCarts() {
-//       try {
-//           const result = await this.model.find().populate("products.product").lean()
-//           return result
-//       } catch (error) {
-//           console.log("getCarts: ", error.message)
-//           throw new Error("Error retrieving carts")
-//       }
-//   }
-
-//   // Get a cart by ID
-//   async getCartById(cartId) {
-//       try {
-//           const result = await this.model.findById(cartId).populate("products.product").lean()
-
-//           if (!result) {
-//               throw new Error("Cart not found")
-//           }
-
-//           return result 
-//       } catch (error) {
-//           console.log("getCartById: ", error.message) 
-//           throw new Error("Error retrieving the cart") 
-//       }
-//   }
-
-//   // Create a cart
-//   async createCart() {
-//       try {
-//           const newCart = {} 
-//           const result = await this.model.create(newCart) 
-//           return result 
-//       } catch (error) {
-//           console.log("createCart: ", error.message) 
-//           throw new Error("Error creating the cart") 
-//       }
-//   }
-
-//   // Add a product to a cart
-//   async addProductToCart(cartId, productId) {
-//       try {
-//           let quantity = 1 
-//           const cart = await this.getCartById(cartId) 
-//           const productInCart = cart.products.find((product) => product.product._id == productId) 
-
-//           if (productInCart) {
-//               productInCart.quantity += quantity 
-//           } else {
-//               cart.products.push({ product: productId, quantity }) 
-//           }
-
-//           const result = await this.model.findByIdAndUpdate(cartId, cart, { new: true }) 
-//           return result 
-//       } catch (error) {
-//           console.log("addProductToCart: ", error.message) 
-//           throw new Error("Error adding the product to the cart") 
-//       }
-//   }
-
-//   // Update a cart with an array of products
-//   async updateProductsInCart(cartId, newProducts) {
-//       try {
-//           const cart = await this.getCartById(cartId) 
-
-//           cart.products = newProducts 
-
-//           const result = await this.model.findByIdAndUpdate(cartId, cart, { new: true }) 
-//           return result 
-//       } catch (error) {
-//           console.log("updateProductsInCart: ", error.message) 
-//           throw new Error("Error updating the cart's products") 
-//       }
-//   }
-
-//   // Update the quantity of a product in the cart
-//   async updateProductQuantityInCart(cartId, productId, newQuantity) {
-//       try {
-//           const cart = await this.getCartById(cartId) 
-//           const productInCartIndex = cart.products.findIndex((product) => product.product._id == productId) 
-
-//           if (productInCartIndex >= 0) {
-//               cart.products[productInCartIndex].quantity = newQuantity 
-
-//               if (newQuantity >= 1) {
-//                   const result = await this.model.findByIdAndUpdate(cartId, cart, { new: true }) 
-//                   return result 
-//               } else {
-//                   throw new Error("Quantity must be greater than or equal to 1") 
-//               }
-//           } else {
-//               throw new Error("Cannot update quantity because the product is not in the cart") 
-//           }
-//       } catch (error) {
-//           console.log("updateProductQuantityInCart: ", error.message) 
-//           throw new Error("Error updating the quantity of the product in the cart") 
-//       }
-//   }
-
-//   // Delete all products from a cart
-//   async deleteAllProductsInCart(cartId, newCart) {
-//       try {
-//           const cart = await this.getCartById(cartId) 
-
-//           newCart = [] 
-//           cart.products = newCart 
-
-//           const result = await this.model.findByIdAndUpdate(cartId, cart, { new: true }) 
-//           return result 
-//       } catch (error) {
-//           console.log("deleteAllProductsInCart: ", error.message) 
-//           throw new Error("Error deleting products from the cart") 
-//       }
-//   }
-
-//   // Delete a product from the cart
-//   async deleteProductInCart(cartId, productId) {
-//       try {
-//           const cart = await this.getCartById(cartId) 
-//           const productInCart = cart.products.find((product) => product.product._id == productId) 
-
-//           if (productInCart) {
-//               const newProducts = cart.products.filter((product) => product.product._id != productId) 
-
-//               cart.products = newProducts 
-
-//               const result = await this.model.findByIdAndUpdate(cartId, cart, { new: true }) 
-//               return result 
-//           } else {
-//               throw new Error("The product to delete is not in the cart") 
-//           }
-//       } catch (error) {
-//           console.log("deleteProductInCart: ", error.message) 
-//           throw new Error("Error deleting the product from the cart") 
-//       }
-//   }

@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { cartMongo } from '../index.js'
+import { cartMongo } from '../dao/index.js'
 
 export const router=Router()
 

@@ -2,23 +2,24 @@ import express from "express"
 import { fileURLToPath } from 'url'
 import path from "path"
 import { engine } from 'express-handlebars'
-import { viewsRouter } from "./routes/ViewsRoutes.js"
-import { cartsRouter } from "../src/routes/carts.js"
+import { viewsRouter } from "./routing/ViewsRoutes.js"
+import { cartsRouter } from "./routing/carts.js"
 import { Server } from 'socket.io'
 import { createServer } from 'http'
 import mongoose from "mongoose"
-import { ProductRouterMongo } from "./routes/products.mongo.js"
-import { cartRouterMongo } from "./routes/carts.mongo.js"
+import { ProductRouterMongo } from "./routing/products.mongo.js"
+import { cartRouterMongo } from "./routing/carts.mongo.js"
 import cookieParser from 'cookie-parser'
 import session from "express-session"
 import MongoStore from 'connect-mongo'
 import dotenv from 'dotenv'
 // import { sessionRouter } from './routes/sessions.js'
-import { SessionsRouter } from "./routes/sessions.js"
+import { SessionsRouter } from "./routing/sessions.js"
 import { inicializarPassport } from "./config/passport.config.js"
 import passport from 'passport'
 import { usuariosModelo } from "./dao/models/users.models.js"
-import { sessionManager } from "./index.js"
+import { sessionManager } from "./dao/index.js"
+import { fork } from "child_process"
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
