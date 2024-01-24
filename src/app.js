@@ -20,6 +20,7 @@ import passport from 'passport'
 import { usuariosModelo } from "./dao/models/users.models.js"
 import { sessionManager } from "./dao/index.js"
 import { fork } from "child_process"
+import { SessionManagerDB } from "./dao/Mongo/sessionMongo.js"
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -133,4 +134,13 @@ io.on('connection', socket=>{
         }
     })
 })
+
+// const db = new SessionManagerDB()
+
+// app.get('/', (req, res) => {
+//     const isLogin = db.getUsuarios(req.cookies.jwt)
+//     res.render('products', { isLogin })
+//     console.log(isLogin)
+//   })
+
 
